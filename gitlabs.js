@@ -1,8 +1,10 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 
-const todoList = [
+let todoList = [
   {
     id: 1,
     task: "Learn Ekspress",
@@ -49,7 +51,7 @@ app.post("/", (req, res) => {
     let newTodo = {
       id: newId,
       task: req.body.task,
-      done: false
+      done: req.body.done
     };
 
     todoList.push(newTodo);
@@ -86,11 +88,14 @@ app.put("/:id", (req, res) => {
 app.delete("/:id", (req, res) => {
   try {
     const idDelete = req.params.id;
-    let newTodo = todoList.filter(item => item.id !== parseInt(idDelete));
+    let newTodo = todoList.filter(item => item.id != parseInt(idDelete));
 
     todoList = newTodo;
 
-    res.status(200).send(todoList);
+    res.status(200).send({
+      message: "success",
+      todoList
+    });
   } catch (error) {
     console.log(error);
     res.send(error);
